@@ -1,0 +1,41 @@
+!!!
+%html{"data-ng-app"=>"mytree"}
+  %head
+    %meta{:charset => "utf-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+    %title= content_for?(:title) ? yield(:title) : "mytree"
+    %meta{:content => "", :name => "description"}
+    %meta{:content => "", :name => "author"}
+    %link{:href=>"//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", :rel=>"stylesheet"}
+    = stylesheet_link_tag "application", :media => "all"
+    = csrf_meta_tags
+    = yield(:head)
+  %body
+    .navbar.navbar-inverse.navbar-fixed-top
+      .container
+        .navbar-header
+          %span.navbar-left
+            .navbar-brand
+              / =render "layouts/logo"
+        .collapse.navbar-collapse 
+          %ul.nav.navbar-nav.navbar-right.capitalize
+            / - if admin_signed_in?
+            /   %li
+            /     %a
+            /       %span.text-info Welcome, #{current_admin.name}
+            /   %li= link_to "Logout", destroy_admin_session_path, method: :delete, :class => 'navbar-link'
+            / - else
+            /   %li= link_to "Sign up", new_admin_registration_path, :id => 'sign-up', :class => 'navbar-link'
+            /   %li= link_to "Login", new_admin_session_path, :class => 'navbar-link'
+
+            / %li= link_to "update statuses", "/update_statuses?snapshot=true", target: "_blank"
+            / %li= link_to "users", "#/users"
+            / %li= link_to "search", "/"
+
+    .container{style:"padding-top:45px"}
+      .content
+        .container
+          %div{"data-ng-view"=>""}
+          = yield
+      %footer
+
