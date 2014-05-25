@@ -2,6 +2,7 @@ class LinksController < ApplicationController
 
   def new
     @link = Link.new
+    #ITAY
   end
 
   def show
