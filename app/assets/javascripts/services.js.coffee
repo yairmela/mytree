@@ -11,7 +11,6 @@ angular.module('Mytree.services', ['ngResource'])
         console.log resp
 
     delete_link: (link) ->
-      console.log link
       $http.delete('/links/' + link.id).then (resp) ->
         resp
 

@@ -14,7 +14,9 @@ class LinksController < ApplicationController
     render json: @links
   end
 
-  def delete
+  def destroy
+    Rails.logger.debug 'blablablabla'
+
     set_link
     @link.destroy!
     head :no_content
@@ -33,6 +35,8 @@ class LinksController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_link
       @link = Link.find(params[:id])
+      Rails.logger.debug '----------------------------'
+      Rails.logger.debug @link
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

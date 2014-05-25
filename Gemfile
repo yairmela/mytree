@@ -36,6 +36,7 @@ gem 'haml'
 gem 'haml-rails'
 gem 'haml_coffee_assets'
 
+gem 'devise'
 gem 'simple_form'
 
 gem 'bcrypt-ruby', '~> 3.1.2'

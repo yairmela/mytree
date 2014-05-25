@@ -7,6 +7,7 @@ ctrls.controller 'MyController',
 	  	Services.get_links().then (resp)->
 	  		$scope.links = {}
 	  		$scope.links = resp.data
+	  		console.log $scope.links
 
 	  $scope.save_link = ()->
 	  	console.log "name" + $scope.name
@@ -21,6 +22,7 @@ ctrls.controller 'MyController',
 
 	  load_links = ()->
 	  	$scope.get_links()
+
 	  	$scope.parent = ''
 	  	$scope.name = ''
 	  	$scope.value = ''
