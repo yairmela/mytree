@@ -17,6 +17,7 @@
 //= require angular-resource
 //= require turbolinks
 //= require hamlcoffee
+//= require bootstrap_load
 //= require mytree_app
 //= require controllers
 //= require_tree .

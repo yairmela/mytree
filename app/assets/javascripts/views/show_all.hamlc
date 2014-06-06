@@ -1,28 +1,61 @@
+
 %h1 My Tree
 %button.btn.btn-sm.btn-primary{ng-click:"get_links()"}Get Links
   %i.fa.fa-download
-%button.btn.btn-sm.btn-primary{ng-click:"save_link()"}Save link
-  %i.fa.fa-download 
+%button.btn.btn-sm.btn-primary{"data-target" => "#myModal", "data-toggle" => "modal"} New Link
+  %i.fa.fa-download
+
+/ Button trigger modal
+-#%button.btn.btn-primary.btn-lg{"data-target" => "#myModal", "data-toggle" => "modal"}
+-#  Launch demo modal
+/ Modal
+#myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
+        %h4#myModalLabel.modal-title Modal title
+      .modal-body
+        %form.form-horizontal{role: "form"}
+          .form-group
+            %label.col-sm-3.control-label{for: "parent-form"} parent
+            .col-sm-7
+              %input#parent-form.form-control1{type: "string", "ng-model"=>"parent",placeholder: "Enter parent"}
+          .form-group
+            %label.col-sm-3.control-label{for: "value-form"} link
+            .col-sm-7
+              %input#value-form.form-control1{type: "string", placeholder: "Enter value", "ng-model"=>"value"}
+          .form-group
+            %label.col-sm-3.control-label{for: "name-form"} name
+            .col-sm-7
+              %input#name-form.form-control1{type: "string", placeholder: "Enter name", "ng-model"=>"name"}
+      .modal-footer
+        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
+        %button.btn.btn-primary{:type => "button", ng-click:"save_link()"} Save changes
+-#%button.btn.btn-sm.btn-primary{ng-click:"get_links()"}Get Links
+-#  %i.fa.fa-download
+-#%button.btn.btn-sm.btn-primary{ng-click:"save_link()"}Save link
+-#  %i.fa.fa-download
 %br
 %br
 .row
-  .col-md-6 
-    %br
-    %form.form-horizontal{role: "form"}
-      .form-group
-        %label.col-sm-3.control-label{for: "parent-form"} parent
-        .col-sm-7
-          %input#parent-form.form-control1{type: "string", "ng-model"=>"parent",placeholder: "Enter parent"}
-      .form-group
-        %label.col-sm-3.control-label{for: "value-form"} link
-        .col-sm-7
-          %input#value-form.form-control1{type: "string", placeholder: "Enter value", "ng-model"=>"value"}
-      .form-group
-        %label.col-sm-3.control-label{for: "name-form"} name
-        .col-sm-7
-          %input#name-form.form-control1{type: "string", placeholder: "Enter name", "ng-model"=>"name"}
+  -#.col-md-6
+    -#%br
+    -#%form.form-horizontal{role: "form"}
+    -#  .form-group
+    -#    %label.col-sm-3.control-label{for: "parent-form"} parent
+    -#    .col-sm-7
+    -#      %input#parent-form.form-control1{type: "string", "ng-model"=>"parent",placeholder: "Enter parent"}
+    -#  .form-group
+    -#    %label.col-sm-3.control-label{for: "value-form"} link
+    -#    .col-sm-7
+    -#      %input#value-form.form-control1{type: "string", placeholder: "Enter value", "ng-model"=>"value"}
+    -#  .form-group
+    -#    %label.col-sm-3.control-label{for: "name-form"} name
+    -#    .col-sm-7
+    -#      %input#name-form.form-control1{type: "string", placeholder: "Enter name", "ng-model"=>"name"}
 
-  .col-md-6
+  .col-md-12
     %table.table
       %thead.capitalize
         %tr{ng-show:"links"}
@@ -31,19 +64,13 @@
             parent
           %th.panel_topic.text-primary
             name
-         
       %tbody
         %tr{ng-repeat:"link in links | orderBy:predicate:reverse" }
           %td
             %button.btn.btn-sm.btn-primary{ng-click:"remove_link(link)"}
-              %i.fa.fa-trash-o 
+              %i.fa.fa-trash-o
           %td.panel_topic
             {{link.parent}}
           %td.panel_topic
             %a{target: "_blank", href:"{{link.value}}"}
               {{link.name}}
-         
-          
-          
-
-

@@ -9,21 +9,37 @@ class LinksController < ApplicationController
     @link = Link.find(params[:id])
   end
 
+  def new_link
+    a = ['itay' => 'nuss']
+
+    render json: a
+  end
+
   def show_all
-    @links = Link.all
+    #Rails.logger.debug '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+
+    #@link.testDB
+    #
+     @links = Link.all
+    #
+     # @links.each do |link|
+     #   link.testDB
+     # end
+    #
     @links = @links.order(parent: :asc)
     render json: @links
+
+
   end
 
   def destroy
-    Rails.logger.debug 'blablablabla'
-
     set_link
     @link.destroy!
     head :no_content
   end
 
   def create
+    #Rails.logger.debug '#######################################################################'
     @link = Link.new(:parent => params[:parent], :value => params[:value], :name => params[:name])
     if @link.save
       render json: @link
