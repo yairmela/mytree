@@ -5,6 +5,6 @@ class CreateLinks < ActiveRecord::Migration
       t.string :url
     end
 
-    add_reference :products, :category, index: true
+    # add_reference :products, :category, index: true
   end
 end

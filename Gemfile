@@ -4,10 +4,8 @@ gem 'nokogiri'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.2'
 
-# Use sqlite3 as the database for Active Record
+# Use pg as the database for Active Record
 gem 'pg'
-
-gem 'sqlite3'
 
 gem 'activeresource', require: 'active_resource'
 
@@ -56,6 +54,10 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.2.1"
   gem "capybara", "~> 2.0.2"
   gem "database_cleaner", '1.0.0.RC1'
+end
+
+group :production do
+  gem 'pg'
 end
 # Use ActiveModel has_secure_password
 
