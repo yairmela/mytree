@@ -1,12 +1,11 @@
 
 %h1 My Tree
-%button.btn.btn-sm.btn-primary{ng-click:"initialize()"} Get Links
-  %i.fa.fa-download
+-#%button.btn.btn-sm.btn-primary{ng-click:"initialize()"} Get Links
+-#  %i.fa.fa-download
 %button.btn.btn-sm.btn-primary{"data-target" => "#newLink", "data-toggle" => "modal"} New Link
   %i.fa.fa-download
 %button.btn.btn-sm.btn-primary{"data-target" => "#newCategory", "data-toggle" => "modal"} New Category
   %i.fa.fa-download
-  -#!= collection_select :category, :name, Category.select(:name).uniq.order('name ASC'), :id, :name, {:prompt => 'Select a Parent'},{:name => "categoryName"}
 
 != JST['views/new_category']()
 != JST['views/new_link']()

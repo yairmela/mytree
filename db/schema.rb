@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140607100205) do
+ActiveRecord::Schema.define(version: 20140607131639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,15 +23,26 @@ ActiveRecord::Schema.define(version: 20140607100205) do
     t.datetime "updated_at"
   end
 
+  create_table "categories_users", id: false, force: true do |t|
+    t.integer "user_id",     null: false
+    t.integer "category_id", null: false
+  end
+
+  add_index "categories_users", ["category_id", "user_id"], name: "index_categories_users_on_category_id_and_user_id", using: :btree
+  add_index "categories_users", ["user_id", "category_id"], name: "index_categories_users_on_user_id_and_category_id", using: :btree
+
+  create_table "link_2_categories", force: true do |t|
+  end
+
   create_table "links", force: true do |t|
     t.string "name"
     t.string "url"
   end
 
   create_table "links_users", id: false, force: true do |t|
-    t.integer "user_id", null: false
-    t.integer "link_id", null: false
-    t.string  "name"
+    t.integer "user_id",   null: false
+    t.integer "link_id",   null: false
+    t.string  "link_name"
   end
 
   add_index "links_users", ["link_id", "user_id"], name: "index_links_users_on_link_id_and_user_id", using: :btree
