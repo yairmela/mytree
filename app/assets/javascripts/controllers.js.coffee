@@ -11,13 +11,34 @@ ctrls.controller 'MyController',
 
     $scope.save_category = ()->
       categoryParams = {name: $scope.categoryName, parentID: $scope.categoryParentID}
+
+      $scope.categoryName = '';
+      $scope.categoryParentID = 1;
+
+      angular.element('#newCategory').modal('hide')
+
       Services.create_category(categoryParams).then (resp)->
         console.log(resp)
+#        $scope.categories = resp
+        $scope.categories.push(resp)
+
+        if ($scope.toggleNewLinkModal)
+          $scope.toggleNewLinkModal = false
+          $scope.linkCategoryID = resp.id
+          angular.element('#newLink').modal('show')
+
 
     $scope.save_link = ()->
       linkParams = {name: $scope.linkName, categoryID: $scope.linkCategoryID, url: $scope.linkUrl}
+
+      $scope.linkName = '';
+      $scope.linkCategoryID = 1;
+      $scope.linkUrl = '';
+
       Services.create_link(linkParams).then (resp)->
         console.log(resp)
+        $scope.links = resp
+#        $scope.links.push(resp)
 
     $scope.get_links = ()->
       Services.fetch_links().then (resp)->
@@ -28,14 +49,30 @@ ctrls.controller 'MyController',
       Services.fetch_categories().then (resp)->
         console.log(resp)
         $scope.categories = resp
+#        $scope.initialize()
+
 
     $scope.getCategoryNameById = (category_id)->
-      category_name = ""
       for category in $scope.categories
         if(category.id == category_id)
           return category.name
 
+
     $scope.initialize()
+
+    $scope.toggle_new_link_modal = ()->
+      $scope.toggleNewLinkModal = true
+      angular.element('#newLink').modal('hide')
+      angular.element('#newCategory').modal('show')
+      true
+
+#    console.log angular.element('#newLink').toggle()
+
+
+#console.log angular.element('#newLink')
+#angular.element('#newLink').on('hidden.bs.modal', function (e) {
+#  alert('sads');
+#})
 
 #    $scope.get_links = ()->
 #      console.log 'get_links req'

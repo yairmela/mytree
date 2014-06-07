@@ -6,14 +6,16 @@ class LinksController < ApplicationController
     fetch_links
   end
 
-  def insert_links_users(link_id, link_name)
-    query = "insert into links_users values(#{current_user.id},#{link_id}, '#{link_name}')"
-    ActiveRecord::Base.connection.execute(query)
-  end
-
   def fetch_links
     links = Link.select("links_users.link_name, links.id, links.url, links.category_id").joins('JOIN links_users ON links_users.link_id = links.id').where('links_users.user_id' => current_user.id).order(category_id: :asc)
     render json: links
+  end
+
+  private
+
+  def insert_links_users(link_id, link_name)
+    query = "insert into links_users values(#{current_user.id},#{link_id}, '#{link_name}')"
+    ActiveRecord::Base.connection.execute(query)
   end
 
   # def new

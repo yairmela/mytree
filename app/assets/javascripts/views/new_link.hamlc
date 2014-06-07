@@ -44,9 +44,10 @@
               %input#link-url-form.form-control1{type: "string", placeholder: "Enter url", "ng-model"=>"linkUrl"}
           .form-group
             %label.col-sm-3.control-label{for: "link-category-form"} Category
-            .col-sm-7
-              %select#category-parent-form.form-control1{'ng-model' => "linkCategoryID", 'ng-options' => "category.name for category in categories"}
+            .col-sm-8
+              %select#category-parent-form.form-control1{'ng-model' => "linkCategoryID", 'ng-options' => "category.id as category.name for category in categories", :style => "display: inline-block;"}
                 -#!= JST['views/select_categories']()
+              %button.btn.btn-sm.btn-primary{"ng-click" => "toggle_new_link_modal()"} +
       .modal-footer
         %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
-        %button.btn.btn-primary{:type => "button", "data-dismisss" => "modal", 'ng-click' => "save_link()"} Save changes
+        %button.btn.btn-primary{:type => "button", "data-dismiss" => "modal", 'ng-click' => "save_link()"} Save changes

@@ -26,8 +26,8 @@ angular.module('Mytree.services', ['ngResource'])
 
     create_category: (categoryParams) ->
       $http.post('/category', categoryParams).then (resp) ->
-        console.log('Services.create_category response', resp.data[0])
-        return resp.data[0]
+        console.log('Services.create_category response', resp.data)
+        return resp.data
 
     create_link: (linkParams) ->
       $http.post('/link', linkParams).then (resp) ->
