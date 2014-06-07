@@ -55,10 +55,6 @@ group :development, :test do
   gem "capybara", "~> 2.0.2"
   gem "database_cleaner", '1.0.0.RC1'
 end
-
-group :production do
-  gem 'pg'
-end
 # Use ActiveModel has_secure_password
 
 # Use unicorn as the app server
