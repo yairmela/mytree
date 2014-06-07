@@ -7,7 +7,7 @@ class LinksController < ApplicationController
   end
 
   def fetch_links
-    links = Link.select("links_users.link_name, links.id, links.url, links.category_id").joins('JOIN links_users ON links_users.link_id = links.id').where('links_users.user_id' => current_user.id).order(category_id: :asc)
+    links = Link.select("links_users.name, links.id, links.url, links.category_id").joins('JOIN links_users ON links_users.link_id = links.id').where('links_users.user_id' => current_user.id).order(category_id: :asc)
     render json: links
   end
 

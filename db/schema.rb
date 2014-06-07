@@ -32,8 +32,9 @@ ActiveRecord::Schema.define(version: 20140607131639) do
   add_index "categories_users", ["user_id", "category_id"], name: "index_categories_users_on_user_id_and_category_id", using: :btree
 
   create_table "links", force: true do |t|
-    t.string "name"
-    t.string "url"
+    t.string  "name"
+    t.string  "url"
+    t.integer "category_id"
   end
 
   create_table "links_users", id: false, force: true do |t|
