@@ -1,40 +1,15 @@
 class Link < ActiveRecord::Base
 	has_many :users
+  belongs_to :category
 
-  @@dbConn = nil
-
-  def initialize(attributes = nil, options = {})
-
-    Rails.logger.debug "\n***************************************************\n"
-
-    super
-
-
-    if (@@dbConn == nil)
-
-      @@dbConn = PG.connect(:dbname => 'links_dev', :port => 5432, :password => 777, :user => 'postgres')
+  def self.fetch_link(url, category_id)
+    if !is_exists(url, category_id)
+      Link.create(:url => url, :category_id => category_id);
     end
-
+    Link.find_by(:url => url, :category_id => category_id);
   end
 
-  def testDB
-
-    #Rails.logger.debug "^^^^^^^^^^^^^^^^^^^^^^^^^^ #{self.name} - start ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    #Rails.logger.debug self.name
-
-    q = "select * from links where id != #{id}"
-
-    #Rails.logger.debug q
-
-
-    results = @@dbConn.exec(q)
-
-    #Rails.logger.debug results.to_yaml
-
-    results.each do |result|
-      Rails.logger.debug result['name']
-    end
-
-    #Rails.logger.debug "^^^^^^^^^^^^^^^^^^^^^^^^^^ #{self.name} - end ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+  def self.is_exists(url, category_id)
+    !Link.where(:url => url, :category_id => category_id).empty?
   end
 end

@@ -19,6 +19,8 @@
               / =render "layouts/logo"
         .collapse.navbar-collapse 
           %ul.nav.navbar-nav.navbar-right.capitalize
+            -#!=
+            -#!= collection_select :category, :name, Category.select(:name).uniq.order('name ASC'), :id, :name, {:prompt => 'Select a Parent'},{:name => "categoryName"}
             / - if admin_signed_in?
             /   %li
             /     %a
@@ -35,7 +37,7 @@
     .container{style:"padding-top:45px" , id:"main-container"}
       .content
         .container
-          %div{"data-ng-view"=>""}
+          %div{"data-ng-view"=>"mytree"}
           = yield
       %footer
 

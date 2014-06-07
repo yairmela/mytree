@@ -1,0 +1,23 @@
+#newCategory.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
+        %h4#myModalLabel.modal-title New Category
+      .modal-body
+        %form.form-horizontal{role: "form"}
+          .form-group
+            %label.col-sm-3.control-label{for: "category-name-form"} Name
+            .col-sm-7
+              %input#category-name-form.form-control1{type: "string", placeholder: "Enter name", "ng-model"=>"categoryName"}
+          .form-group
+            %label.col-sm-3.control-label{for: "category-parent-form"} Parent
+            .col-sm-7
+              %select#category-parent-form.form-control1{'ng-model' => "categoryParentID", 'ng-options' => "category.id as category.name for category in categories"}
+              -#%select#category-parent-form.form-control1{ng-options:"category.name for category in categories"}
+              -#%select#category-parent-form.form-control1{ng-repeat:"link in links | orderBy:predicate:reverse"}
+              -#  %option{value: {{link.id}}} {{link.url}}
+              -#!= JST['views/select_categories']()
+      .modal-footer
+        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
+        %button.btn.btn-primary{:type => "button", "data-dismisss" => "modal", 'ng-click' => "save_category()"} Save changes

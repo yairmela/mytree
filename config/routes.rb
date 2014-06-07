@@ -1,9 +1,12 @@
 Mytree::Application.routes.draw do
 
   devise_for :users
-  get "links" => "links#show_all"
-  post "links" => "links#create"
-  delete "links/:id" => "links#destroy"
+  get "link" => "links#fetch_links"
+  post "link" => "links#create"
+  delete "link/:id" => "links#destroy"
   root "mytree#index"
+
+  get "category" => "category#fetch_categories"
+  post 'category' =>  'category#create'
   
 end

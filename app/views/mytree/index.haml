@@ -1,1 +1,5 @@
+-#= collection_select :category, :id, Category.select(:id, :name).uniq.order('id ASC'), :id, :name, {:prompt => 'Select a Parent'},{:name => "categoryName"}
+<script>
+-#= raw Category.getAllCategories().to_json
+</script>
 = javascript_include_tag "application"

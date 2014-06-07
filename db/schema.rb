@@ -11,17 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140428200818) do
+ActiveRecord::Schema.define(version: 20140607100205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "links", force: true do |t|
-    t.string   "value"
-    t.string   "parent"
+  create_table "categories", force: true do |t|
+    t.string   "name"
+    t.integer  "category_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name"
+  end
+
+  create_table "links", force: true do |t|
+    t.string   "url"
+    t.integer  "category_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "links_users", id: false, force: true do |t|
+    t.integer "user_id", null: false
+    t.integer "link_id", null: false
+    t.string  "name"
+  end
+
+  add_index "links_users", ["link_id", "user_id"], name: "index_links_users_on_link_id_and_user_id", using: :btree
+  add_index "links_users", ["user_id", "link_id"], name: "index_links_users_on_user_id_and_link_id", using: :btree
+
+  create_table "statistics", force: true do |t|
+    t.integer "link_id"
+    t.integer "counter"
   end
 
   create_table "users", force: true do |t|
