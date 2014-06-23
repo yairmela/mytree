@@ -38,9 +38,9 @@ ActiveRecord::Schema.define(version: 20140607131639) do
   end
 
   create_table "links_users", id: false, force: true do |t|
-    t.integer "user_id", null: false
-    t.integer "link_id", null: false
-    t.string  "name"
+    t.integer "user_id",    null: false
+    t.integer "link_id",    null: false
+    t.string  "links_name"
   end
 
   add_index "links_users", ["link_id", "user_id"], name: "index_links_users_on_link_id_and_user_id", using: :btree
