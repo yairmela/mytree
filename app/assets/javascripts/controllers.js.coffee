@@ -4,10 +4,13 @@ ctrls.controller 'MyController',
   ($scope, Services)->
 
     $scope.initialize = ()->
+      console.log "initialize"
       $scope.links = {}
       $scope.categories = {}
+      $scope.friends = {}
       $scope.get_links()
       $scope.get_categories()
+      $scope.get_friends()
 
     $scope.save_category = ()->
       categoryParams = {name: $scope.categoryName, parentID: $scope.categoryParentID}
@@ -51,6 +54,11 @@ ctrls.controller 'MyController',
         $scope.categories = resp
 #        $scope.initialize()
 
+    $scope.get_friends = ()->
+      Services.fetch_friends().then (resp)->
+        console.log(resp)
+        $scope.friends = resp
+
 
     $scope.getCategoryNameById = (category_id)->
       for category in $scope.categories
@@ -58,14 +66,21 @@ ctrls.controller 'MyController',
           return category.name
 
 
-    $scope.initialize()
-
     $scope.toggle_new_link_modal = ()->
       $scope.toggleNewLinkModal = true
       angular.element('#newLink').modal('hide')
       angular.element('#newCategory').modal('show')
       true
 
+
+    $scope.show_friend_tree = ()->
+      console.log($scope.friendID)
+      Services.get_friend_links($scope.friendID).then (resp)->
+        console.log(resp)
+        $scope.links = resp
+
+
+    $scope.initialize()
 #    console.log angular.element('#newLink').toggle()
 
 

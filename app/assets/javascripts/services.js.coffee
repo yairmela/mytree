@@ -43,3 +43,13 @@ angular.module('Mytree.services', ['ngResource'])
       $http.get('/category').then (resp) ->
         console.log('Services.fetch_categories response', resp.data)
         return resp.data
+
+    fetch_friends: () ->
+      $http.get('/friend').then (resp) ->
+        console.log('Services.fetch_friends response', resp.data)
+        return resp.data
+
+    get_friend_links: (friendID) ->
+      $http.get('/friend/' + friendID).then (resp) ->
+        console.log('Services.get_friend_links response', resp.data)
+        return resp.data

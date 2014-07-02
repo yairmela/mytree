@@ -16,6 +16,25 @@ class LinksController < ApplicationController
   def insert_links_users(link_id, link_name)
     query = "insert into links_users values(#{current_user.id},#{link_id}, '#{link_name}')"
     ActiveRecord::Base.connection.execute(query)
+
+    update_statistics(link_id)
+  end
+
+  def update_statistics(link_id)
+
+    query = "select id, counter from statistics where link_id = #{link_id}"
+
+    results = ActiveRecord::Base.connection.select_rows(query)
+
+    if results.empty?
+      query = "insert into statistics (link_id, counter) values (#{link_id}, 1)"
+    else
+      statistics_id = results[0][0]
+      counter = results[0][1].to_i + 1
+      query = "update statistics set counter = #{counter} where id = #{statistics_id}"
+    end
+
+    ActiveRecord::Base.connection.execute(query)
   end
 
   # def new
