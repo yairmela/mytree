@@ -1,16 +1,22 @@
 ctrls = angular.module('Mytree.controllers',[])
 
 ctrls.controller 'MyController',
-  ($scope, Services)->
+
+  ($scope, Services, TreeSketch)->
 
     $scope.initialize = ()->
-      console.log "initialize"
+#      console.log "initialize"
       $scope.links = {}
       $scope.categories = {}
       $scope.friends = {}
-      $scope.get_links()
       $scope.get_categories()
       $scope.get_friends()
+      $("button").attr("disabled", null);
+
+    $scope.onCategoriesAndLinksFetched = ()->
+#      console.log $scope.categories
+#      console.log $scope.links
+      TreeSketch.drawTree($scope.categories, $scope.links)
 
     $scope.save_category = ()->
       categoryParams = {name: $scope.categoryName, parentID: $scope.categoryParentID}
@@ -21,15 +27,20 @@ ctrls.controller 'MyController',
       angular.element('#newCategory').modal('hide')
 
       Services.create_category(categoryParams).then (resp)->
-        console.log(resp)
+#        console.log(resp)
 #        $scope.categories = resp
         $scope.categories.push(resp)
 
-        if ($scope.toggleNewLinkModal)
-          $scope.toggleNewLinkModal = false
+        if ($scope.toggleLinkModal == 'newLink')
           $scope.linkCategoryID = resp.id
           angular.element('#newLink').modal('show')
-
+          $scope.toggleLinkModal = false
+        else if ($scope.toggleLinkModal == 'editLink')
+          $scope.linkCategoryID = resp.id
+          angular.element('#editLink').modal('show')
+          $scope.toggleLinkModal = false
+        else
+          $scope.onCategoriesAndLinksFetched()
 
     $scope.save_link = ()->
       linkParams = {name: $scope.linkName, categoryID: $scope.linkCategoryID, url: $scope.linkUrl}
@@ -41,24 +52,36 @@ ctrls.controller 'MyController',
       Services.create_link(linkParams).then (resp)->
         console.log(resp)
         $scope.links = resp
-#        $scope.links.push(resp)
+        $scope.onCategoriesAndLinksFetched()
 
-    $scope.get_links = ()->
-      Services.fetch_links().then (resp)->
-        console.log(resp)
+    $scope.delete_link = (linkID)->
+      Services.delete_link(linkID).then (resp)->
         $scope.links = resp
+        $scope.onCategoriesAndLinksFetched()
+
+    $scope.edit_link = ()->
+      linkParams = {name: $scope.linkName, categoryID: $scope.linkCategoryID, url: $scope.linkUrl}
+
+      Services.update_link($scope.linkID, linkParams).then (resp)->
+        $scope.links = resp
+        $scope.onCategoriesAndLinksFetched()
 
     $scope.get_categories = ()->
       Services.fetch_categories().then (resp)->
-        console.log(resp)
+#        console.log(resp)
         $scope.categories = resp
-#        $scope.initialize()
+        $scope.get_links()
+
+    $scope.get_links = ()->
+      Services.fetch_links().then (resp)->
+#        console.log(resp)
+        $scope.links = resp
+        $scope.onCategoriesAndLinksFetched()
 
     $scope.get_friends = ()->
       Services.fetch_friends().then (resp)->
-        console.log(resp)
+#        console.log(resp)
         $scope.friends = resp
-
 
     $scope.getCategoryNameById = (category_id)->
       for category in $scope.categories
@@ -66,70 +89,48 @@ ctrls.controller 'MyController',
           return category.name
 
 
-    $scope.toggle_new_link_modal = ()->
-      $scope.toggleNewLinkModal = true
+    $scope.toggle_new_link_modal = (type)->
+      $scope.toggleLinkModal = type
       angular.element('#newLink').modal('hide')
+      angular.element('#editLink').modal('hide')
       angular.element('#newCategory').modal('show')
       true
 
-
     $scope.show_friend_tree = ()->
-      console.log($scope.friendID)
+#      console.log($scope.friendID)
       Services.get_friend_links($scope.friendID).then (resp)->
-        console.log(resp)
         $scope.links = resp
+
+        $scope.categories = []
+        tmp = []
+        for l in $scope.links
+
+          if (!tmp[l.category_id])
+            tmp[l.category_id] = 1;
+            c = {id: l.category_id, name: l.category_name, category_id: l.category_parent_id}
+            $scope.categories.push(c)
+
+          if (!tmp[l.category_parent_id])
+            tmp[l.category_parent_id] = 1;
+            c = {id: l.category_parent_id, name: l.category_name + ' PARENT', category_id: 1}
+            $scope.categories.push(c)
+
+        $scope.onCategoriesAndLinksFetched()
+        $("button").attr("disabled", "disabled");
+
+    $scope.set_edit_link_fields = (link)->
+      console.log(link)
+
+      if (link)
+        $scope.linkName = link.link_name
+        $scope.linkUrl = link.url
+        $scope.linkCategoryID = link.category_id
+        $scope.linkID = link.id
+      else
+        $scope.linkName = ""
+        $scope.linkUrl = ""
+        $scope.linkCategoryID = ""
 
 
     $scope.initialize()
-#    console.log angular.element('#newLink').toggle()
-
-
-#console.log angular.element('#newLink')
-#angular.element('#newLink').on('hidden.bs.modal', function (e) {
-#  alert('sads');
-#})
-
-#    $scope.get_links = ()->
-#      console.log 'get_links req'
-#	  	Services.fetch_links().then (resp)->
-#	  		$scope.links = {}
-#        $scope.links = resp.data
-
-
-
-#    $scope.save_category = ()->
-#      categoryParams = {categoryName: $scope.categoryName, categoryParentID: $scope.categoryParentID}
-#      #console.log(categoryParams);
-#
-#      Services.create_category(categoryParams).then (resp)->
-#        console.log(resp)
-#
-#	  $scope.save_link = ()->
-#	  	console.log "before save_links" + $scope.name
-#	  	Services.save_link($scope.value,$scope.parent, $scope.name ).then (status)->
-#	  		load_links()
-#	  		console.log 'after load_links'
-#
-#	  $scope.remove_link = (link)->
-#	  	Services.delete_link(link).then (resp)->
-#	  		console.log 'resp: ' + resp
-#	  		load_links()
-#
-#	  load_links = ()->
-#	  	$scope.get_links()
-#
-##	  	$scope.parent = ''
-##	  	$scope.name = ''
-##	  	$scope.value = ''
-#
-#    $scope.new_link = ()->
-#      console.log $('#myModal')#.modal()
-#      linkParams = {nuss : 'itay'}
-#      console.log('scope.new_link request', linkParams)
-
-      #Services.new_link(linkParams).then (resp)->
-        #new_link()
-      #  console.log('scope.new_link response', resp)
-
-#	  load_links()
 

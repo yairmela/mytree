@@ -4,21 +4,26 @@
     My Tree
 -#%button.btn.btn-sm.btn-primary{ng-click:"initialize()"} Get Links
 -#  %i.fa.fa-download
-%button.btn.btn-sm.btn-primary{"data-target" => "#newLink", "data-toggle" => "modal"} New Link
-  %i.fa.fa-download
+%button.btn.btn-sm.btn-primary{"data-target" => "#newLink", "data-toggle" => "modal", 'ng-click'=>"set_edit_link_fields(false)"} New Link
+  %i.fa.fa-leaf
 %button.btn.btn-sm.btn-primary{"data-target" => "#newCategory", "data-toggle" => "modal"} New Category
-  %i.fa.fa-download
+  %i.fa.fa-tag
 %select#friends-form.form-control1{'ng-change' => "show_friend_tree()", 'ng-model' => "friendID", 'ng-options' => "friend.id as friend.email for friend in friends", :style => "display: inline-block; float: right;"}
   %option{:value => '', :disabled => 'disabled', :selected => 'selected'}
-    Empty
+    Show friend's tree
 
 != JST['views/new_category']()
 != JST['views/new_link']()
+!= JST['views/edit_link']()
 
 %br
 %br
+
 .row
-  .col-md-12
+  %div#tree-canvas-container.col-md-4
+    %canvas#tree-canvas
+    %canvas#tip-canvas{:width => 100, :height => 25}
+  .col-md-8
     %table.table
       %thead.capitalize
         %tr{ng-show:"links"}
@@ -30,10 +35,14 @@
       %tbody
         %tr{ng-repeat:"link in links | orderBy:predicate:reverse"}
           %td
-            %button.btn.btn-sm.btn-primary{'ng-click'=>"remove_link(link)"}
+            %button.btn.btn-sm.btn-primary{'ng-click'=>"delete_link(link.id)"}
               %i.fa.fa-trash-o
+            -#%button.btn.btn-sm.btn-primary{'ng-click'=>"edit_link(link.id)"}
+            %button.btn.btn-sm.btn-primary{"data-target" => "#editLink", "data-toggle" => "modal", 'ng-click'=>"set_edit_link_fields(link)"}
+              %i.fa.fa-pencil
+              -#%span.glyphicon.glyphicon-star
           %td.panel_topic
             {{getCategoryNameById(link.category_id)}}
-          %td.panel_topic
+          %td.panel_topic{'title'=>"{{link.url}}"}
             %a{target: "_blank", href:"{{link.url}}"}
               {{link.link_name}}

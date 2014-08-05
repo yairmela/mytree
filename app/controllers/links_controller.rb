@@ -1,14 +1,34 @@
 class LinksController < ApplicationController
 
   def create
+    linkName = params[:name]
+    Rails.logger.debug "############## create link #{linkName} #########################################################"
     link = Link.fetch_link(params[:url], params[:categoryID])
     insert_links_users(link.id, params[:name])
     fetch_links
   end
 
+  def update
+    linkID = params[:id]
+    Rails.logger.debug "############## update link id #{linkID} #########################################################"
+
+    delete_link(linkID)
+
+    create
+  end
+
   def fetch_links
-    links = Link.select("links_users.links_name, links.id, links.url, links.category_id").joins('JOIN links_users ON links_users.link_id = links.id').where('links_users.user_id' => current_user.id).order(category_id: :asc)
+    links = Link.select("links_users.link_name, links.id, links.url, links.category_id").joins('JOIN links_users ON links_users.link_id = links.id').where('links_users.user_id' => current_user.id).order(category_id: :asc)
     render json: links
+  end
+
+  def remove_link
+    linkID = params[:id]
+    Rails.logger.debug "############## remove link id #{linkID} #########################################################"
+
+    delete_link(linkID)
+
+    fetch_links
   end
 
   private
@@ -36,6 +56,13 @@ class LinksController < ApplicationController
 
     ActiveRecord::Base.connection.execute(query)
   end
+
+  def delete_link(link_id)
+    query = "delete from links_users where user_id = #{current_user.id} and link_id = #{link_id};"
+
+    ActiveRecord::Base.connection.execute(query)
+  end
+
 
   # def new
   #   @link = Link.new

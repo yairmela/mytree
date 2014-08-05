@@ -3,7 +3,9 @@
     .modal-content
       .modal-header
         %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} &times;
-        %h4#myModalLabel.modal-title New Category
+        %h4#myModalLabel.modal-title
+          %span.fa.fa-tag
+          %span New Category
       .modal-body
         %form.form-horizontal{role: "form"}
           .form-group
