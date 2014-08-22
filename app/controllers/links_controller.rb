@@ -35,6 +35,8 @@ class LinksController < ApplicationController
 
   def insert_links_users(link_id, link_name)
     query = "insert into links_users values(#{current_user.id},#{link_id}, '#{link_name}')"
+    Rails.logger.info("query")
+    Rails.logger.info(query)
     ActiveRecord::Base.connection.execute(query)
 
     update_statistics(link_id)
