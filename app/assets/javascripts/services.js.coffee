@@ -28,16 +28,18 @@ angular.module('Mytree.services', ['ngResource'])
 
     get_friend_links: (friendID) ->
       $http.get('/friend/' + friendID).then (resp) ->
-        console.log('Services.get_friend_links response', resp.data)
+#        console.log('Services.get_friend_links response', resp.data)
         return resp.data
 
     delete_link: (linkID) ->
-      console.log('Services.delete_link request',  {linkID: linkID})
       $http.delete('/link/' + linkID).then (resp) ->
-        console.log('Services.delete_link response', resp.data)
         return resp.data
 
     update_link: (linkID, linkParams) ->
       $http.post('/link/' + linkID, linkParams).then (resp) ->
-        console.log('Services.update_link response', resp.data)
+#        console.log('Services.update_link response', resp.data)
+        return resp.data
+
+    add_category: (categoryID) ->
+      $http.post('/category/' + categoryID).then (resp) ->
         return resp.data

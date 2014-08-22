@@ -46,28 +46,79 @@ angular.module('Mytree.treeSketch', ['ngResource'])
 
       return {x: mx, y: my}
 
-    onCanvasClick: (e) ->
-      console.log('hover...')
-      pt = t.getMouse(e, canvas);
+    showTooltip: (x, y, msg) ->
+      tipCanvas.style.left = (x) + "px";
+      tipCanvas.style.top = (y) + "px";
+      tipCtx.clearRect(0, 0, tipCanvas.width, tipCanvas.height);
+      tipCtx.fillText(msg, 5, 15);
+      $('#tip-canvas').fadeIn()
 
-#      console.log pt
+
+    onCanvasClick: (e) ->
+      console.log('onCanvasClick')
+      pt = t.getMouse(e, canvas)
+#      console.log(pt)
+      console.log(m_categories)
+#      console.log(m_links)
+
+      for c in m_categories
+        angle = c.angle
+
+        spx = c.spX;
+        spy = c.spY
+        epx = c.epX
+        epy = c.epY
+        xDir = epx - spx
+
+        if c.id == 1
+          continue
+
+        if ((pt.y > spy) || (pt.y < epy))
+          continue
+
+        x1 = epx
+        y1 = epy
+
+        x2 = spx
+        y2 = spy
+
+#        console.log(H)
+#        console.log(pt)
+#        console.log('p1 = (' + x1 + ' , ' + y1 + ')')
+#        console.log('p2 = (' + x2 + ' , ' + y2 + ')')
+
+        a = (y1 - y2) / (x1 - x2);
+        b = y1 - (a * x1)
+
+#        console.log('Y = ' + a + ' X + ' + b)
+
+        x = pt.x
+        y = pt.y
+
+        res = a * x + b - y
+
+        if c.width >= Math.abs(res)
+          console.log(c.name)
+          t.showTooltip(x, y, '[' + c.id + '] ' + c.name)
+          return
+
+#        console.log('p = (' + x + ' , ' + y + ')')
+#        console.log(a * x + b - y)
+      $('#tip-canvas').fadeOut()
+
+
+    onCanvasHover: (e) ->
+      pt = t.getMouse(e, canvas);
 
       for l in m_links
         dx = pt.x - l.x
         dy = pt.y - l.y
 
         if (dx * dx + dy * dy <= radius * radius)
-          console.log l.url
-
-          tipCanvas.style.left = (l.x + 15) + "px";
-          tipCanvas.style.top = (l.y - 30) + "px";
-          tipCtx.clearRect(0, 0, tipCanvas.width, tipCanvas.height);
-#          tipCtx.rect(0,0,tipCanvas.width,tipCanvas.height);
-#          tipCtx.fillText( l.link_name+ ': ' + l.url, 5, 15);
-          tipCtx.fillText(l.link_name, 5, 15);
-          $('#tip-canvas').fadeIn()
+#          console.log l
+          t.showTooltip(l.x + 15, l.y - 30, '[' + l.id + '] ' + l.link_name)
           return
-#          tipCanvas.style.left = "-200px";
+
       $('#tip-canvas').fadeOut()
 
 
@@ -76,13 +127,16 @@ angular.module('Mytree.treeSketch', ['ngResource'])
 
     drawTree: (categories, links) ->
       console.log "drawing tree..."
+
       t = this
       canvas = document.getElementById("tree-canvas");
       tipCanvas = document.getElementById("tip-canvas");
 
       $('#tree-canvas').unbind('mousemove');
-      $('#tree-canvas').bind('mousemove', t.onCanvasClick);
+      $('#tree-canvas').bind('mousemove', t.onCanvasHover);
 
+      $('#tree-canvas').unbind('click');
+      $('#tree-canvas').bind('click', t.onCanvasClick);
 
       $('#tip-canvas').hide()
 
@@ -100,7 +154,11 @@ angular.module('Mytree.treeSketch', ['ngResource'])
       m_children = []
 
       for c in categories
-        if (c.category_id == c.id)
+       # if (c.category_id == c.id)
+        c.id *= 1
+        c.category_id *= 1
+
+        if (c.id == 1)
           continue
         if (m_children[c.category_id])
           m_children[c.category_id] += 1
@@ -108,6 +166,8 @@ angular.module('Mytree.treeSketch', ['ngResource'])
           m_children[c.category_id] = 1
 
       for l in links
+        l.id *= 1
+        l.category_id *= 1
         if (m_children[l.category_id])
           m_children[l.category_id] += 1
         else
@@ -176,12 +236,23 @@ angular.module('Mytree.treeSketch', ['ngResource'])
           if c.category_id == sp.id && c.id != sp.id
 
             angle = Math.round((180 / (nBranches + 1)) * i + ((Math.random() * 10) - 5))
+
             i++
 
             ep = t.get_endpoint(sp.x, sp.y, angle, length);
             ep.id = c.id
 
             ctx.lineWidth = line_width * Math.round(50 + Math.random()*20)/100;
+
+            c.len = length;
+            c.width = line_width
+            c.angle = angle
+            c.spX = sp.x
+            c.spY = H-sp.y
+            c.epX = ep.x
+            c.epY = H-ep.y
+#            c.xDirection = c.epX - c.spX
+
 
             ctx.moveTo(sp.x, H-sp.y);
             ctx.lineTo(ep.x, H-ep.y);

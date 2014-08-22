@@ -8,8 +8,9 @@ Mytree::Application.routes.draw do
   root "mytree#index"
 
   get "category" => "category#fetch_categories"
-  post 'category' =>  'category#create'
+  post "category" =>  "category#create"
+  post "category/:id" =>  "category#add_category"
 
   get "friend" => "friend#fetch_friends"
-  get "friend/:id" => "friend#fetch_friend_links"
+  get "friend/:id" => "friend#fetch_friend_tree"
 end
