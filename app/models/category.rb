@@ -11,4 +11,5 @@ class Category < ActiveRecord::Base
   def self.is_exists(name, parent_id)
     !Category.where(:category_id => parent_id, :name => name).empty?
   end
+
 end

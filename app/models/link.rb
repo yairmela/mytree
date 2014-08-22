@@ -12,4 +12,5 @@ class Link < ActiveRecord::Base
   def self.is_exists(url, category_id)
     !Link.where(:url => url, :category_id => category_id).empty?
   end
+
 end

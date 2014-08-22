@@ -121,3 +121,8 @@ table .lead {
   height: 47px;
   width: 47px;
 }
+
+span.star {
+    font-size: 20px;
+    padding-left: 12px;
+}
