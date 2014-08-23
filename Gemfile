@@ -50,7 +50,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-group :development, :test, :production do
+group :development, :test do
   gem 'debugger'
   gem "rspec-rails", "~> 2.13.0"
   gem "factory_girl_rails", "~> 4.2.1"
